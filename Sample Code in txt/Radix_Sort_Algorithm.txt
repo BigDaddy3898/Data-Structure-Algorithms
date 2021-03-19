@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+inline void printArray(const vector<int> &Arr, const int &n)
+{
+	cout << '\n';
+	for (int i = 0; i < n; i++)
+		cout << Arr[i] << "\t";
+	cout << '\n';
+}
+void radixSort(vector <int> &Arr, const int &n)
+{
+	vector <int> copyArr;
+	copyArr.resize(n);
+	int  max = Arr[0], demicalGrade = 1;
+	for (int i = 0; i < n; i++)
+		if (Arr[i] > max)
+			max = Arr[i];
+	while (max / demicalGrade > 0)
+	{
+		int bucket[10] = { 0 };
+		for (int i = 0; i < n; i++)
+			bucket[Arr[i] / demicalGrade % 10]++;
+		for (int i = 1; i < 10; i++)
+			bucket[i] += bucket[i - 1];
+		for (int i = n - 1; i >= 0; i--)
+			copyArr[--bucket[Arr[i] / demicalGrade % 10]] = Arr[i];
+		for (int i = 0; i < n; i++)
+			Arr[i] = copyArr[i];
+		demicalGrade *= 10;
+	}
+}
+int main()
+{
+	int  n;
+	cin >> n;
+	vector <int> arr;
+	int n_copy = n;
+	while (n_copy) 
+	{
+		int temp;
+		cin >> temp;
+		arr.push_back(temp);
+			--n_copy;
+	}
+	radixSort(arr, n);
+	printArray(arr, n);
+	return 0;
+}

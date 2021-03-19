@@ -1,0 +1,62 @@
+#include <iostream>
+#include <algorithm>
+#include<cmath>
+#include<vector>
+
+typedef long long usg_t;
+
+static const usg_t limit{ 1000000 };
+static const usg_t m{ 1000000007 };
+std::vector <usg_t> fact;
+
+inline usg_t inv(usg_t a, usg_t m);
+inline usg_t powmod(usg_t a, usg_t b, usg_t m);
+inline usg_t modulo_combination(usg_t n, usg_t k);
+inline usg_t modulo_multi(usg_t a, usg_t b);
+
+int main()
+{
+    fact.push_back(1); // at 0
+    fact.push_back(1); // at 1
+    for (usg_t i = 2; i <= ( limit + 2); ++i) {
+        fact.push_back(modulo_multi(fact.at(i - 1), i));
+    }
+    usg_t T;
+    std::cin >> T;
+    while (T)
+    {
+        usg_t n, k;
+        std::cin >> n >> k;
+        std::cout << modulo_combination(n, k)<<'\n';
+        --T;
+    }
+    return 0;
+}
+inline usg_t powmod(usg_t a, usg_t b, usg_t m) {
+    a %= m;
+    if (a == 0) return 0;
+    usg_t product = 1;
+    while (b > 0) {
+        if (b & 1) {    // you can also use b % 2 == 1
+            product *= a;
+            product %= m;
+            --b;
+        }
+        a *= a;
+        a %= m;
+        b /= 2;    // you can also use b >> 1
+    }
+    return product;
+}
+inline usg_t inv(usg_t a, usg_t m) {
+    return powmod(a, m - 2, m);
+}
+inline usg_t modulo_combination(usg_t n, usg_t k)
+{
+    usg_t numerator{ 1 }, denominator{ 1 };
+    numerator = fact.at(n);
+    denominator = modulo_multi(fact.at(k), fact.at(n - k));
+    return (numerator % m) * inv(denominator, m) % m;
+}
+inline usg_t modulo_multi(usg_t a, usg_t b) 
+{ return (a % m) * (b % m) % m; }
